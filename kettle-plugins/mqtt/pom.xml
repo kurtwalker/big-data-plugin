@@ -126,6 +126,11 @@
       <version>${activemq.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.moquette</groupId>
+      <artifactId>moquette-broker</artifactId>
+      <version>0.10</version>
+    </dependency>
 
   </dependencies>
 
@@ -139,11 +144,12 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Embed-Dependency>org.eclipse.paho.client.mqttv3;scope=compile|runtime</Embed-Dependency>
+            <Embed-Dependency>org.eclipse.paho.client.mqttv3;scope=compile|runtime,moquette-broker;scope=compile|runtime,bugsnag;scope=compile|runtime,metrics-core;scope=compile|runtime,jackson-databind;scope=compile|runtime,jackson-annotations;scope=compile|runtime,hazelcast;scope=compile|runtime,jackson-core;scope=compile|runtime,metrics-librato;scope=compile|runtime,librato-java;scope=compile|runtime,netty*;scope=compile|runtime,activemq-protobuf;scope=compile|runtime,guava;scope=compile|runtime,protobuf-java;scope=compile|runtime</Embed-Dependency>
+            <Embed-Transitive>true</Embed-Transitive>
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>org.pentaho.di.trans.step.mqtt.*;version=${project.version}</Export-Package>
-            <Import-Package>org.eclipse.swt*;resolution:=optional,org.pentaho.di.osgi,org.pentaho.di.core.plugins,*</Import-Package>
+            <Import-Package>org.eclipse.swt*;resolution:=optional,org.pentaho.di.osgi,org.pentaho.di.core.plugins,*;resolution:=optional</Import-Package>
           </instructions>
         </configuration>
       </plugin>
