@@ -12,6 +12,7 @@ import java.util.Properties;
 
 public class MQTTServerSource extends BlockingQueueStreamSource<List<Object>> {
   private MQTTServerMeta mqttServerMeta;
+  private Server server;
 
   protected MQTTServerSource( MQTTServer streamStep, MQTTServerMeta mqttServerMeta ) {
     super( streamStep );
@@ -19,7 +20,7 @@ public class MQTTServerSource extends BlockingQueueStreamSource<List<Object>> {
   }
 
   @Override public void open() {
-    Server server = new Server();
+    server = new Server();
     MemoryConfig memoryConfig = new MemoryConfig( new Properties() );
     memoryConfig.setProperty( BrokerConstants.PORT_PROPERTY_NAME, mqttServerMeta.getPort() );
     try {
@@ -28,5 +29,10 @@ public class MQTTServerSource extends BlockingQueueStreamSource<List<Object>> {
     } catch ( IOException e ) {
       e.printStackTrace();
     }
+  }
+
+  @Override public void close() {
+    super.close();
+    server.stopServer();
   }
 }
