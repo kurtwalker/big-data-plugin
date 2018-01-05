@@ -54,10 +54,17 @@ public class MQTTServerDialog extends BaseStreamingDialog implements StepDialogI
   private static Class<?> PKG = MQTTConsumerMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 
   private MQTTServerMeta mqttMeta;
+  private Label wlPort;
+  private TextVar wPort;
 
   public MQTTServerDialog( Shell parent, Object in, TransMeta tr, String sname ) {
     super( parent, in, tr, sname );
     mqttMeta = (MQTTServerMeta) in;
+  }
+
+  @Override protected void getData() {
+    super.getData();
+    wPort.setText( mqttMeta.getPort() );
   }
 
   @Override protected String getDialogTitle() {
@@ -65,6 +72,35 @@ public class MQTTServerDialog extends BaseStreamingDialog implements StepDialogI
   }
 
   @Override protected void buildSetup( Composite wSetupComp ) {
+    props.setLook( wSetupComp );
+    FormLayout setupLayout = new FormLayout();
+    setupLayout.marginHeight = 15;
+    setupLayout.marginWidth = 15;
+    wSetupComp.setLayout( setupLayout );
+
+    wlPort = new Label( wSetupComp, SWT.LEFT );
+    props.setLook( wlPort );
+    wlPort.setText( BaseMessages.getString( PKG, "MQTTServerDialog.Port" ) );
+    FormData fdlConnection = new FormData();
+    fdlConnection.left = new FormAttachment( 0, 0 );
+    fdlConnection.top = new FormAttachment( 0, 0 );
+    fdlConnection.right = new FormAttachment( 50, 0 );
+    wlPort.setLayoutData( fdlConnection );
+
+    wPort = new TextVar( transMeta, wSetupComp, SWT.SINGLE | SWT.LEFT | SWT.BORDER );
+    props.setLook( wPort );
+    wPort.addModifyListener( lsMod );
+    FormData fdConnection = new FormData();
+    fdConnection.left = new FormAttachment( 0, 0 );
+    fdConnection.right = new FormAttachment( 75, 0 );
+    fdConnection.top = new FormAttachment( wlPort, 5 );
+    wPort.setLayoutData( fdConnection );
+  }
+
+  @Override protected void additionalOks( BaseStreamStepMeta meta ) {
+    super.additionalOks( meta );
+    MQTTServerMeta mqttServerMeta = (MQTTServerMeta) meta;
+    mqttServerMeta.setPort( wPort.getText() );
   }
 
   @Override protected int[] getFieldTypes() {

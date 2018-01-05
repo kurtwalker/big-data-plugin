@@ -52,9 +52,25 @@ import java.util.List;
 @InjectionSupported( localizationPrefix = "MQTTServerMeta.Injection." )
 public class MQTTServerMeta extends BaseStreamStepMeta implements StepMetaInterface, Cloneable {
 
+  public static final String PORT = "PORT";
+  @Injection( name = "PORT" )
+  private String port = "1883";
+
   public MQTTServerMeta() {
     super();
     setSpecificationMethod( ObjectLocationSpecificationMethod.FILENAME );
+  }
+
+  @Override public void saveRep( Repository rep, IMetaStore metaStore, ObjectId transId, ObjectId stepId )
+    throws KettleException {
+    super.saveRep( rep, metaStore, transId, stepId );
+    rep.saveStepAttribute( transId, stepId, PORT, port  );
+  }
+
+  @Override public void readRep( Repository rep, IMetaStore metaStore, ObjectId id_step, List<DatabaseMeta> databases )
+    throws KettleException {
+    super.readRep( rep, metaStore, id_step, databases );
+    setPort( rep.getStepAttributeString( id_step, PORT ) );
   }
 
   @Override public String getFileName() {
@@ -79,5 +95,13 @@ public class MQTTServerMeta extends BaseStreamStepMeta implements StepMetaInterf
 
   public String getDialogClassName() {
     return "org.pentaho.di.trans.step.mqtt.MQTTServerDialog";
+  }
+
+  public String getPort() {
+    return port;
+  }
+
+  public void setPort( String port ) {
+    this.port = port;
   }
 }

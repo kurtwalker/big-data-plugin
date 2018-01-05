@@ -51,7 +51,7 @@ public class MQTTServer extends BaseStreamStep implements StepInterface {
     mqttServerMeta.getFields(
       rowMeta, getStepname(), null, null, this, repository, metaStore );
     window = new FixedTimeStreamWindow<>( subtransExecutor, rowMeta, getDuration(), getBatchSize() );
-    source = new MQTTServerSource( this );
+    source = new MQTTServerSource( this, mqttServerMeta );
     return init;
   }
 }
